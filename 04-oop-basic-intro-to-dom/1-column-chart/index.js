@@ -1,13 +1,18 @@
 export default class ColumnChart {
   chartHeight = 50;
+  subElements = {};
 
-  constructor(options = {}) {
-    let {data = [], label = '', value = 0, link = '', formatHeading = heading => heading} = options;
+  constructor({
+    data = [],
+    label = '',
+    value = 0,
+    link = '',
+    formatHeading = data => data
+  } = {}) {
     this.data = data;
     this.title = label;
-    this.value = value;
+    this.value = formatHeading(value);
     this.link = link;
-    this.formatHeading = formatHeading;
     this.render();
   }
 
@@ -19,7 +24,7 @@ export default class ColumnChart {
           ${this.link !== '' ? '<a href="' + this.link + '" class="column-chart__link">View all</a>' : ''}
         </div>
         <div class="column-chart__container">
-          <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
+          <div data-element="header" class="column-chart__header">${this.value}</div>
           <div data-element="body" class="column-chart__chart">
              ${this.getCharCols()}
           </div>
@@ -34,15 +39,16 @@ export default class ColumnChart {
   }
 
   render() {
-    const element = document.createElement('div'); // (*)
+    const element = document.createElement('div');
     element.innerHTML = this.getTemplate();
+    element.querySelectorAll('[data-element]').forEach(element => this.subElements[element.dataset.element] = element);
     this.element = element.firstElementChild;
   }
 
   update(newData = []) {
     this.data = newData;
-    this.element.querySelector('.column-chart__chart').innerHTML = this.getCharCols();
-    newData.length ? this.element.classList.remove('column-chart_loading') : this.element.classList.add('column-chart_loading');
+    this.subElements.body.innerHTML = this.getCharCols();
+    this.data.length ? this.element.classList.remove('column-chart_loading') : this.element.classList.add('column-chart_loading');
   }
 
   remove () {

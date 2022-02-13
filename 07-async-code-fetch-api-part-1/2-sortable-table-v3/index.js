@@ -24,7 +24,6 @@ export default class SortableTable {
     this.url.searchParams.set('_end', this.loadingStep.toString());
 
     this.render();
-    // .then(() => this.addEventListeners()); Why doesn't it work? 'should call "sortOnClient" for sorting on the client side' test fails (*)
   }
 
   getTemplate() {
@@ -89,17 +88,19 @@ export default class SortableTable {
 
     this.element = element.firstElementChild;
 
-    this.addEventListeners(); // Adding event listeners here instead of (*) ^
+    this.addEventListeners();
 
     if (this.sorted.length) {
       this.setSortParams(...this.sorted);
     }
 
-    await this.loadData()
-      .then(() => {
-        this.addBodyRows();
-      })
-      .catch(err => err);
+    try {
+      await this.loadData();
+      this.addBodyRows();
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
   
   setSortParams(id, order) {
@@ -217,7 +218,6 @@ export default class SortableTable {
   }
 
   removeEventListeners() {
-    this.subElements.header.removeEventListener('pointerdown', this.handleHeaderClick);
     document.removeEventListener('scroll', this.handleScroll);
   }
 

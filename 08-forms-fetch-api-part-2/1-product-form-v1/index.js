@@ -47,7 +47,6 @@ export default class ProductForm {
 
     this.initEventListeners();
 
-
     return this.element;
   }
 
@@ -249,9 +248,6 @@ export default class ProductForm {
     this.subElements['productForm'].querySelector('[name="uploadImage"]').addEventListener('click', this.uploadImage);
   }
 
-  removeEventListeners () {
-  }
-
   remove () {
     this.element.remove();
   }
@@ -259,7 +255,5 @@ export default class ProductForm {
   destroy() {
     this.remove();
     this.subElements = null;
-
-    this.removeEventListeners();
   }
 }

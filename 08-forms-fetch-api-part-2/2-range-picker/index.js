@@ -5,6 +5,7 @@ export default class RangePicker {
   newTo = null;
   currentTime = Date.now() - new Date().setHours(0, 0, 0, 0);
   controlsAdded = false;
+  weekDays = '';
 
   constructor({
     from = new Date(Date.now() - 2.628e+9), // One month back
@@ -62,7 +63,6 @@ export default class RangePicker {
     month.setHours(0, 0, 0, 0);
     month.setMilliseconds(this.currentTime);
 
-    // const monthName = month.toLocaleString('en-US', { month: 'long' }); static.html has month in English
     const monthName = month.toLocaleString('ru', { month: 'long' });
 
     return `
@@ -71,19 +71,32 @@ export default class RangePicker {
             <time datetime="${monthName}">${monthName}</time>
           </div>
           <div class="rangepicker__day-of-week">
-            <div>Пн</div>
-            <div>Вт</div>
-            <div>Ср</div>
-            <div>Чт</div>
-            <div>Пт</div>
-            <div>Сб</div>
-            <div>Вс</div>
+            ${this.getDaysOfWeek(month)}
           </div>
           <div class="rangepicker__date-grid">
             ${this.getDaysInMonth(month, this.from, this.to, month.getDay())}
           </div>
         </div>
     `;
+  }
+
+  getDaysOfWeek(month) {
+    if (this.weekDays) return this.weekDays;
+
+    const date = new Date(month);
+    let weekdays = '';
+
+    for (let i = 0; i < 7; i++) {
+      date.setDate(date.getDate() - date.getDay() + i + 1);
+
+      let weekday = date.toLocaleString('ru', {weekday: 'short'});
+      weekday = weekday.charAt(0).toUpperCase() + weekday.slice(1);
+      weekdays += `<div>${weekday}</div>`;
+    }
+
+    this.weekDays = weekdays;
+
+    return this.weekDays;
   }
 
   getDaysInMonth(month, from, to, startFrom) {
@@ -151,7 +164,6 @@ export default class RangePicker {
 
   dateToString(date) {
     return date.toLocaleDateString('ru');
-    // return date.toLocaleString('en-US', {day: '2-digit', month: '2-digit', year: '2-digit'}); static.html shows this format, but tests expect dd.mm.yyyy
   }
 
   closeAndUpdate() {
@@ -245,7 +257,7 @@ export default class RangePicker {
 
         this.sortDates(this.from, this.to);
 
-        for (let day of allDays) {
+        for (const day of allDays) {
           const {value} = day.dataset;
           const date = new Date(value);
 
@@ -283,9 +295,6 @@ export default class RangePicker {
   }
 
   removeEventListeners () {
-    const {input, selector} = this.subElements;
-    input.removeEventListener('click', this.handleInputClick);
-    selector.removeEventListener('click', this.handleSelectorClick);
     document.removeEventListener('click', this.handleDocumentClick, true);
   }
 

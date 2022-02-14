@@ -11,7 +11,7 @@ export default class ColumnChart {
     data = [],
     url = '',
     range = {
-      from: new Date(Date.now() - 2.628e+9),
+      from: new Date(Date.now() - 2.628e+9), // one month back
       to: new Date(),
     },
     label = '',

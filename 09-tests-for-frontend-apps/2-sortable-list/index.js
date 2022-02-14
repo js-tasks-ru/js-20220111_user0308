@@ -44,8 +44,6 @@ export default class SortableList {
       );
     }
 
-    console.log(this.nextEl === this.currentItem);
-
     if (this.nextEl !== this.currentItem) {
       const box = this.nextEl.getBoundingClientRect();
 
@@ -131,8 +129,19 @@ export default class SortableList {
     this.plhItem.remove();
   }
 
+  handleDragStart = event => {
+    if (event.target.closest('[data-grab-handle]')) {
+      event.preventDefault();
+
+      // Adding this ^ instead of v. Is this the right way to cancel dragstart event?
+      // el.ondragstart = function() {
+      //   return false;
+      // };
+    }
+  }
+
   initEventListeners () {
-    this.element.addEventListener('dragstart', () => false);
+    this.element.addEventListener('dragstart', this.handleDragStart);
     document.addEventListener('pointerdown', this.handlePointerDown);
     document.addEventListener('pointerup', this.handlePointerUp);
   }

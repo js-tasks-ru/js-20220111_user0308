@@ -170,7 +170,7 @@ export default class ProductForm {
 
     for (const [key, value] of new FormData(this.subElements['productForm'])) {
       if (key !== 'url' && key !== 'source') {
-        formData[key] = +value ? +value : escapeHtml(value);
+        formData[key] = +value || value === '0' ? +value : escapeHtml(value);
       }
       else {
         currentImg[key] = value;

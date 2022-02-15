@@ -193,9 +193,7 @@ export default class ProductForm {
     .then(response => {
       this.save();
     })
-    .catch(err => console.log(err))
-    .finally(() => {
-    });
+    .catch(err => console.log(err));
   }
 
   uploadImage = async (event) => {

@@ -5,13 +5,14 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class ColumnChart {
   chartHeight = 50;
   subElements = {};
+  currentDate = new Date();
 
   constructor({
     value = 0,
     data = [],
     url = '',
     range = {
-      from: new Date(Date.now() - 2.628e+9), // one month back
+      from: new Date(this.currentDate.setMonth(this.currentDate.getMonth() - 1)),
       to: new Date(),
     },
     label = '',

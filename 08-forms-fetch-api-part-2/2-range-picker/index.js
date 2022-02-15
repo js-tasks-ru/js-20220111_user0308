@@ -3,12 +3,13 @@ export default class RangePicker {
   currentShift = 0;
   newFrom = null;
   newTo = null;
+  currentDate = new Date();
   currentTime = Date.now() - new Date().setHours(0, 0, 0, 0);
   controlsAdded = false;
   weekDays = '';
 
   constructor({
-    from = new Date(Date.now() - 2.628e+9), // One month back
+    from = new Date(this.currentDate.setMonth(this.currentDate.getMonth() - 1)),
     to = new Date(),
   } = {}) {
     this.from = from;

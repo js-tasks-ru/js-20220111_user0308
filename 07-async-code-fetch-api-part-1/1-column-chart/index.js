@@ -5,14 +5,13 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 export default class ColumnChart {
   chartHeight = 50;
   subElements = {};
-  currentDate = new Date();
 
   constructor({
     value = 0,
     data = [],
     url = '',
     range = {
-      from: new Date(this.currentDate.setMonth(this.currentDate.getMonth() - 1)),
+      from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
       to: new Date(),
     },
     label = '',
@@ -69,13 +68,16 @@ export default class ColumnChart {
     try {
       const json = await fetchJson(this.url);
       const data = Object.values(json);
-      this.value = this.formatHeading(data.reduce((previousValue, currentValue) => previousValue + currentValue));
+      this.value = '';
+      if (data.length) {
+        this.value = this.formatHeading(data.reduce((previousValue, currentValue) => previousValue + currentValue));
+      }
       this.subElements.header.innerHTML = this.value;
       this.subElements.body.innerHTML = this.getCharCols(data);
 
       data.length ? this.element.classList.remove('column-chart_loading') : this.element.classList.add('column-chart_loading');
 
-      return json; // But why? Leaving it here cos otherwise 'should load data correctly' test fails
+      return json;
     }
     catch (err) {
       console.error(err);

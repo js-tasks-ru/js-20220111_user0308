@@ -11,7 +11,7 @@ export default class ColumnChart {
     data = [],
     url = '',
     range = {
-      from: new Date(Date.now() - 2.628e+9), // one month back
+      from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
       to: new Date(),
     },
     label = '',
@@ -68,13 +68,16 @@ export default class ColumnChart {
     try {
       const json = await fetchJson(this.url);
       const data = Object.values(json);
-      this.value = this.formatHeading(data.reduce((previousValue, currentValue) => previousValue + currentValue));
+      this.value = '';
+      if (data.length) {
+        this.value = this.formatHeading(data.reduce((previousValue, currentValue) => previousValue + currentValue));
+      }
       this.subElements.header.innerHTML = this.value;
       this.subElements.body.innerHTML = this.getCharCols(data);
 
       data.length ? this.element.classList.remove('column-chart_loading') : this.element.classList.add('column-chart_loading');
 
-      return json; // But why? Leaving it here cos otherwise 'should load data correctly' test fails
+      return json;
     }
     catch (err) {
       console.error(err);

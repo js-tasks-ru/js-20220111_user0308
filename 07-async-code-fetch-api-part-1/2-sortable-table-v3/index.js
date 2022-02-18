@@ -96,6 +96,27 @@ export default class SortableTable {
 
     try {
       await this.loadData();
+
+      if (this.isSortLocally && this.sorted.length) this.sort(...this.sorted);
+
+      this.addBodyRows();
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  async update(from, to) {
+    if (from && to) {
+      this.url.searchParams.set('from', from.toISOString());
+      this.url.searchParams.set('to', to.toISOString());
+    }
+
+    try {
+      await this.loadData();
+
+      if (this.isSortLocally && this.sorted.length) this.sort(...this.sorted);
+
       this.addBodyRows();
     }
     catch (err) {
@@ -183,10 +204,10 @@ export default class SortableTable {
       this.prevScroll = currentScroll;
       this.readyToLoad = false;
 
-      const newStart = +this.url.searchParams.get('_end') + 1;
+      const newStart = this.url.searchParams.get('_end');
       const newEnd = newStart + this.loadingStep;
 
-      this.url.searchParams.set('_start', newStart.toString());
+      this.url.searchParams.set('_start', newStart);
       this.url.searchParams.set('_end', newEnd.toString());
 
       this.loadData()

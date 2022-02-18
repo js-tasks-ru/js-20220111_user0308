@@ -57,6 +57,9 @@
 <script type="module">
   import Page from './index.js';
 
+  const main = document.querySelector('.main');
+  main.classList.add('is-loading');
+
   const contentNode = document.querySelector('#content');
 
   async function initialize () {
@@ -65,6 +68,8 @@
 
     contentNode.innerHTML = '';
     contentNode.append(element);
+
+    main.classList.remove('is-loading');
   }
 
   initialize();

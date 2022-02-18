@@ -8,7 +8,7 @@ export default class RangePicker {
   weekDays = '';
 
   constructor({
-    from = new Date(Date.now() - 2.628e+9), // One month back
+    from = new Date(new Date().setMonth(new Date().getMonth() - 1)),
     to = new Date(),
   } = {}) {
     this.from = from;
